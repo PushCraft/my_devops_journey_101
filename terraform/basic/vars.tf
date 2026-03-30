@@ -8,3 +8,4 @@ variable "az1" {}
 variable "az2" {}
 variable "Subnet_1_Name" {}
 variable "Subnet_2_Name" {}
+variable "publicRoute_Name" {}
