@@ -2,6 +2,6 @@
 resource "aws_internet_gateway" "basic_igw" {
   vpc_id = aws_vpc.basicvpc.id
   tags = {
-        "Source" = var.source-tag
+    "Source" = var.source-tag
   }
 }
