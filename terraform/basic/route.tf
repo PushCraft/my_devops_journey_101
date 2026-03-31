@@ -8,3 +8,14 @@ resource "aws_route_table" "DemobasicPublic_RTB" {
     cidr_block = "0.0.0.0/0"
   }
 }
+
+
+resource "aws_route_table_association" "DemoRouteAssociation-1" {
+   route_table_id = aws_route_table.DemobasicPublic_RTB.id
+   subnet_id = aws_subnet.basic_subnet1.id
+}
+
+resource "aws_route_table_association" "DemoRouteAssociation-2" {
+   route_table_id = aws_route_table.DemobasicPublic_RTB.id
+   subnet_id = aws_subnet.basic_subnet2.id
+}
