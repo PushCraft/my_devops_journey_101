@@ -10,4 +10,4 @@ variable "Subnet_1_Name" {}
 variable "Subnet_2_Name" {}
 variable "publicRoute_Name" {}
 variable "source-tag" {}
-variable "argument-key1" {}
+variable "argument_key1" {}
