@@ -1,3 +1,5 @@
+## Need to study this page.
+
 resource "aws_route_table" "DemobasicPublic_RTB" {
   vpc_id = aws_vpc.basicvpc.id
   tags = {
@@ -11,11 +13,11 @@ resource "aws_route_table" "DemobasicPublic_RTB" {
 
 
 resource "aws_route_table_association" "DemoRouteAssociation-1" {
-   route_table_id = aws_route_table.DemobasicPublic_RTB.id
-   subnet_id = aws_subnet.basic_subnet1.id
+  route_table_id = aws_route_table.DemobasicPublic_RTB.id
+  subnet_id      = aws_subnet.basic_subnet1.id
 }
 
 resource "aws_route_table_association" "DemoRouteAssociation-2" {
-   route_table_id = aws_route_table.DemobasicPublic_RTB.id
-   subnet_id = aws_subnet.basic_subnet2.id
+  route_table_id = aws_route_table.DemobasicPublic_RTB.id
+  subnet_id      = aws_subnet.basic_subnet2.id
 }
