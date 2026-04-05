@@ -5,6 +5,7 @@ resource "aws_route_table" "DemobasicPublic_RTB" {
   tags = {
     "Source" = var.source-tag
   }
+  # Specify IGW. 
   route {
     gateway_id = aws_internet_gateway.basic_igw.id
     cidr_block = "0.0.0.0/0"
