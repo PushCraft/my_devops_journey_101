@@ -20,3 +20,16 @@ resource "aws_subnet" "basic_subnet2" {
     "source" = var.source-tag
   }
 }
+
+
+# Sub-3
+
+resource "aws_subnet" "basic_subnet3" {
+  vpc_id                  = aws_vpc.basicvpc.id
+  cidr_block              = var.Publid_subnet_3_Cidr
+  availability_zone       = var.az3
+  map_public_ip_on_launch = true
+  tags = {
+    "source" = var.source-tag
+  }
+}
