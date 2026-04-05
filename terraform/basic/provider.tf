@@ -6,6 +6,7 @@ terraform {
     bucket         = "polaris-state-store-bucketxyz"
     key            = "polaris-basic.tfstate"
     region         = "ca-central-1"
+    use_lockfile = true
   }
 }
 
