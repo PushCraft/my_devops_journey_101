@@ -4,4 +4,7 @@ resource "aws_internet_gateway" "basic_igw" {
   tags = {
     "Source" = var.source-tag
   }
+
+  depends_on = [ aws_vpc.basicvpc ]
+
 }
