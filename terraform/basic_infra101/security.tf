@@ -1,4 +1,3 @@
-
 resource "aws_security_group" "securitygroup-01" {
   vpc_id      = aws_vpc.basicvpc.id
   name        = "websecurity" # Name of the SG.
@@ -7,8 +6,8 @@ resource "aws_security_group" "securitygroup-01" {
     "Source" = var.source-tag
   }
   lifecycle {
-    ignore_changes = [ tags ]
-    create_before_destroy = true
+    ignore_changes = [ tags ] # Terraform will ignore the manual 'tags' you add from AWS console.
+    create_before_destroy = true    # This will create the infra first and then destroy it.
   }
 }
 
