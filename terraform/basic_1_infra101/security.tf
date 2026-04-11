@@ -15,9 +15,9 @@ resource "aws_security_group" "securitygroup-01" {
 resource "aws_vpc_security_group_ingress_rule" "allow_ssh_ipv4" {
   security_group_id = aws_security_group.securitygroup-01.id
   cidr_ipv4         = "0.0.0.0/0" # Anyone from internet can connect.  
-  from_port         = 22
+  from_port         = 22       # Start of the Port range.
   ip_protocol       = "tcp"
-  to_port           = 22
+  to_port           = 22       # End of the Port range. 
 
 lifecycle {
   create_before_destroy = true
@@ -28,7 +28,7 @@ lifecycle {
 resource "aws_vpc_security_group_ingress_rule" "allow_https_ipv4" {
   security_group_id = aws_security_group.securitygroup-01.id
   cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 443
+  from_port         = 443    
   ip_protocol       = "tcp"
   to_port           = 443
 }
