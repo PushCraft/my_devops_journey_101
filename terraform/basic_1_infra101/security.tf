@@ -21,8 +21,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh_ipv4" {
 
 lifecycle {
   create_before_destroy = true
-}
-
+ }
 }
 
 resource "aws_vpc_security_group_ingress_rule" "allow_https_ipv4" {
