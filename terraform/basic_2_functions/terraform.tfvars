@@ -4,4 +4,4 @@ tag1    = "source-Terraform"
 
 cidrSubnet1 = ""
 
-az1     = "ca-central-1a"
+az1 = "ca-central-1a"
