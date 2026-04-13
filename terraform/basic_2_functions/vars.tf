@@ -1,7 +1,7 @@
 variable "region" {}
-variable "vpcCidr" {}
-variable "tag1" {}
+variable "vpc_name" {}
+variable "vpc_cidr" {}
+variable "tagX" {}
 
-variable "cidrSubnet1" {}
-
-variable "az1" {}
+variable "publicSubnetCidr" {}
+variable "az" {}
