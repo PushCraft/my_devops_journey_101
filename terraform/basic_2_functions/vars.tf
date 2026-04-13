@@ -4,4 +4,5 @@ variable "vpc_cidr" {}
 variable "tagX" {}
 
 variable "publicSubnetCidr" {}
+variable "privateSubnetCidr" {}
 variable "az" {}

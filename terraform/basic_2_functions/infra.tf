@@ -15,3 +15,15 @@ resource "aws_internet_gateway" "DemoBasicIGW" {
   }
   depends_on = [aws_vpc.DemoBasicVpc]
 }
+
+# Route Table.
+resource "aws_route_table" "PublicRTB" {
+    vpc_id = aws_vpc.DemoBasicVpc.id
+    tags = {
+        "source" = var.tagX
+    }
+    route {
+        gateway_id = aws_internet_gateway.DemoBasicIGW.id
+        cidr_block = "0.0.0.0/0"
+    }
+}

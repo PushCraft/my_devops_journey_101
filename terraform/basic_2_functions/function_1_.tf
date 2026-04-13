@@ -3,8 +3,10 @@
 
 resource "aws_subnet" "PublicSubnet_functions" {
   vpc_id = aws_vpc.DemoBasicVpc.id
-  count  = 3
+  #count  = 3
   # This will create '3' specified resources, Which is 3 subnets.  Indexed would be "0", "1" and "2". 
+  count = length(var.publicSubnetCidr)
+  # The count value will be adjusted depending upon the number of "CIDR" list items you provide.
   # You will provide the 3 CIDR blocks as 'list' type. When assigning to variable value.
   # Terraform will loop( Iterate ) because of 'count' function.
   cidr_block        = element(var.publicSubnetCidr, count.index)
@@ -21,5 +23,18 @@ resource "aws_subnet" "PublicSubnet_functions" {
     #  Anythign in between {} is interpolation, combines all the parts into a single string.
     # var.vpc_name == variable called. "PublicXSubnet" == Static String. "count.index" ==> Auto-increament numbers. 
 
+  }
+}
+
+
+resource "aws_subnet" "PrivateSubnet_function" {
+  vpc_id            = aws_vpc.DemoBasicVpc.id
+  count             = length(var.privateSubnetCidr)
+  cidr_block        = element(var.privateSubnetCidr, count.index)
+  availability_zone = element(var.az, count.index)
+
+  tags = {
+    "source" = var.tagX
+    "Name"   = "${var.vpc_name} PrivateSubNetX ${count.index}"
   }
 }
