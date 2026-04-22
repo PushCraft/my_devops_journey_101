@@ -17,7 +17,8 @@ resource "aws_subnet" "PublicSubnet_functions" {
 
 
   # Since you have 3 subnet's. You will also provide the 3 cidr block in list type. 
-  map_public_ip_on_launch = true # This will assign an Public IP for every resource in this subnet. 
+  map_public_ip_on_launch = true 
+  # This will assign an Public IP for every resource in this subnet. 
   tags = {
     "source" = var.tagX
     "Name"   = "${var.vpc_name}-PublicXSubnet-${count.index}"
@@ -39,3 +40,4 @@ resource "aws_subnet" "PrivateSubnet_function" {
     "Name"   = "${var.vpc_name} PrivateSubNetX ${count.index}"
   }
 }
+
