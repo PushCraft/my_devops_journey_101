@@ -1,0 +1,14 @@
+# Terraform state
+*.tfstate
+*.tfstate.*
+
+# Terraform working directory
+.terraform/
+
+# Optional (recommended)
+crash.log
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+.terraform.lock.hcl
