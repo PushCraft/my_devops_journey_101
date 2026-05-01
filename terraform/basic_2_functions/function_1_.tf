@@ -3,7 +3,7 @@
 
 resource "aws_subnet" "PublicSubnet_functions" {
   vpc_id = aws_vpc.DemoBasicVpc.id
-  #count  = 3
+  # count  = 3
   # This will create '3' specified resources, Which are 3 subnets.  
   #Indexed would be "0", "1" and "2". 
   count = length(var.publicSubnetCidr)
