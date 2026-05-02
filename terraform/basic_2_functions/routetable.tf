@@ -1,9 +1,10 @@
-
-
 # Route Table create. ( Public )
 resource "aws_route_table" "publicRTB" {
   vpc_id = aws_vpc.DemoBasicVpc.id
 
+  tags = {
+      Name     = "${var.Pushing_from} -Public"
+  }
   route {
     gateway_id = aws_internet_gateway.DemoBasicIGW.id
     cidr_block = "0.0.0.0/0"
@@ -15,21 +16,19 @@ resource "aws_route_table_association" "PublicSubnetRTBAssociation" {
   route_table_id = aws_route_table.publicRTB.id
   count          = length(var.publicSubnetCidr)
 
-  subnet_id = element(var.publicSubnetCidr[count.index].id, count.index)
+  subnet_id = element(aws_subnet.PublicSubnet_functions.*.id, count.index)
   # This will provide all the subnet ID's ( like a for loop )
 }
-
-
-
-
-
-
 
 
 # Route table create ( Private )
 resource "aws_route_table" "privateRTB" {
   vpc_id = aws_vpc.DemoBasicVpc.id
   # route => Not defined.
+
+  tags = {
+      Name     = "${var.Pushing_from} -Private"
+  }
 }
 
 
@@ -38,7 +37,8 @@ resource "aws_route_table" "privateRTB" {
 resource "aws_route_table_association" "PrivateSubnetRTBAssociate" {
   route_table_id = aws_route_table.privateRTB.id
   count          = length(var.privateSubnetCidr)
-  subnet_id      = element(var.privateSubnetCidr[count.index].id, count.index)
+  subnet_id      = element(aws_subnet.PrivateSubnet_function.*.id, count.index)
+   # aws_subnet.PrivateSubnet_function.*.id
 
 }
 
