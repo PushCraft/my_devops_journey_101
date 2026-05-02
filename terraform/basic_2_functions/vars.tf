@@ -6,3 +6,5 @@ variable "tagX" {}
 variable "publicSubnetCidr" {}
 variable "privateSubnetCidr" {}
 variable "az" {}
+
+variable "Pushing_from" {}

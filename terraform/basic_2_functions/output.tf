@@ -20,3 +20,12 @@ output "PublicSubnet-2" {
   value = aws_subnet.PublicSubnet_functions.2.id
 }
 
+
+# Output is used to show useful values after Terraform runs. 
+# Terraform outputs gets values from Terraform's understanding of the Infra mostly from->
+# Terraform state, Provider/API response, data sources , variables/locals. 
+
+
+output "gettingVpc_id" {
+  value = aws_vpc.DemoBasicVpc.id
+}

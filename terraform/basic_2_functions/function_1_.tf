@@ -5,7 +5,7 @@ resource "aws_subnet" "PublicSubnet_functions" {
   vpc_id = aws_vpc.DemoBasicVpc.id
   # count  = 3
   # This will create '3' specified resources, Which are 3 subnets.  
-  #Indexed would be "0", "1" and "2". 
+  #Indexed would be "0", "1" and "2".
   count = length(var.publicSubnetCidr)
   # The count value will be adjusted depending upon the number of "CIDR" list items you provide.
   # You will provide the 3 CIDR blocks as 'list' type. When assigning to variable value.
@@ -41,3 +41,4 @@ resource "aws_subnet" "PrivateSubnet_function" {
   }
 }
 
+# Here count is "Meta-Argument. other common are -> for_each, depends_on, lifecycle, provider"

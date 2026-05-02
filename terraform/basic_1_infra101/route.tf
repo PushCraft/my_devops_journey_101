@@ -9,6 +9,8 @@ resource "aws_route_table" "DemobasicPublic_RTB" {
   route {
     gateway_id = aws_internet_gateway.basic_igw.id
     cidr_block = "0.0.0.0/0"
+    # This CIDR block is the destination route match. 
+    # Route tables define next hop, not permissions. 
   }
 }
 
@@ -22,3 +24,8 @@ resource "aws_route_table_association" "DemoRouteAssociation-2" {
   route_table_id = aws_route_table.DemobasicPublic_RTB.id
   subnet_id      = aws_subnet.basic_subnet2.id
 }
+
+
+#A subnet becomes public when its associated route table has a default route 0.0.0.0/0 pointing to an Internet Gateway. 
+  #A public IP is not what makes the subnet public; 
+   #it makes the EC2 instance reachable from the internet when SG/NACL rules also allow traffic.
