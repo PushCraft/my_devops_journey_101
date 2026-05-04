@@ -26,6 +26,7 @@ output "PublicSubnet-2" {
 # Terraform state, Provider/API response, data sources , variables/locals. 
 
 
+
 output "gettingVpc_id" {
   value = aws_vpc.DemoBasicVpc.id
 }

@@ -39,3 +39,29 @@ resource "aws_vpc_security_group_ingress_rule" "allow_everything_ipv4" {
   ip_protocol       = -1
   # Sementically equivalent to all the ports.
 } # ALL ports (0–65535). No need to use "from_port" / "to_port".    
+
+
+
+# Old way of  creating SG -->  Still is used in few places. 
+/*
+
+  resource "aws_security_group" "demo_SG" {
+    name = "web-sg"
+    vpc_id = aws_vpc.basicvpc.id
+
+   ingress  {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+   }
+
+   ingress  {
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+   }
+  }
+
+  */
