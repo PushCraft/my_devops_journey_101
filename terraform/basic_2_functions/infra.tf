@@ -18,7 +18,7 @@ resource "aws_internet_gateway" "DemoBasicIGW" {
   vpc_id = aws_vpc.DemoBasicVpc.id
   tags = {
     "source" = var.tagX
-      Name     = var.Pushing_from
+    Name     = var.Pushing_from
   }
   depends_on = [aws_vpc.DemoBasicVpc]
 }

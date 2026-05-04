@@ -37,7 +37,7 @@ resource "aws_subnet" "PrivateSubnet_function" {
 
   tags = {
     "source" = var.tagX
-    Name   = "${var.vpc_name} PrivateSubNetX ${count.index}"
+    Name     = "${var.vpc_name} PrivateSubNetX ${count.index}"
   }
 }
 

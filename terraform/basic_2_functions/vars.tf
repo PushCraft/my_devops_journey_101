@@ -8,3 +8,9 @@ variable "privateSubnetCidr" {}
 variable "az" {}
 
 variable "Pushing_from" {}
+
+
+variable "env" {}
+variable "ami" {}
+variable "key" {}
+variable "type" {}

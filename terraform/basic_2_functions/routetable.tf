@@ -3,7 +3,7 @@ resource "aws_route_table" "publicRTB" {
   vpc_id = aws_vpc.DemoBasicVpc.id
 
   tags = {
-      Name     = "${var.Pushing_from} -Public"
+    Name = "${var.Pushing_from} -Public"
   }
   route {
     gateway_id = aws_internet_gateway.DemoBasicIGW.id
@@ -27,7 +27,7 @@ resource "aws_route_table" "privateRTB" {
   # route => Not defined.
 
   tags = {
-      Name     = "${var.Pushing_from} -Private"
+    Name = "${var.Pushing_from} -Private"
   }
 }
 
@@ -38,7 +38,7 @@ resource "aws_route_table_association" "PrivateSubnetRTBAssociate" {
   route_table_id = aws_route_table.privateRTB.id
   count          = length(var.privateSubnetCidr)
   subnet_id      = element(aws_subnet.PrivateSubnet_function.*.id, count.index)
-   # aws_subnet.PrivateSubnet_function.*.id
+  # aws_subnet.PrivateSubnet_function.*.id
 
 }
 

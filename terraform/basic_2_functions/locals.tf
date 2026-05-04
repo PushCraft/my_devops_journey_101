@@ -1,5 +1,5 @@
 locals {
-  ingress_rule1 = [   # "ingress_rule1" -> This is variable.
+  ingress_rule1 = [ # "ingress_rule1" -> This is variable.
     {
       port        = 22
       description = "port for SSH"
@@ -18,7 +18,7 @@ locals {
     }
   ]
 
-  ingress_rule2 = [    # "ingress_rule2" -> This is variable.
+  ingress_rule2 = [ # "ingress_rule2" -> This is variable.
     {
       port        = 22
       description = "port for SSH"
