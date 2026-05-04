@@ -16,13 +16,13 @@ resource "aws_instance" "DemoEC2" {
 
   # User data ( Optional )
   user_data = <<EOF
-   #!/bin/bash
-   apt update -y
-   apt install nginx -y
-   service nginx start
-   echo "------------------------------------------"
-   echo "<h1><center> ${var.vpc_name} Web-Server-${count.index}</center></h1>" >> /var/html/index.nginx-debian.html 
-   EOF
+#!/bin/bash
+dnf update -y
+dnf install nginx -y
+systemctl enable nginx
+systemctl start nginx
+echo "<h1><center>${var.vpc_name} Web-Server-${count.index + 1}</center></h1>" > /usr/share/nginx/html/index.html
+EOF
 
 
   # Changing the default Storage : ( Optional )
