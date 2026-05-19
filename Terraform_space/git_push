@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "Pushing data"
+
+git add *
+git commit -m "Adding all new data"
+
+git push origin main
+
+echo " Data is pushed"
