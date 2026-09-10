@@ -1,0 +1,62 @@
+FROM buildpack-deps:bookworm
+
+# ensure local python is preferred over distribution python
+ENV PATH=/usr/local/bin:$PATH
+
+# http://bugs.python.org/issue19846
+# > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
+ENV LANG=C.UTF-8
+
+# extra dependencies (over what buildpack-deps already includes)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        tk-dev \
+        uuid-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV PYTHON_VERSION=3.14.5
+ENV PYTHON_SHA256=7e32597b99e5d9a39abed35de4693fa169df3e5850d4c334337ffd6a19a36db6
+
+RUN set -eux; \
+    \
+    wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz"; \
+    echo "$PYTHON_SHA256 *python.tar.xz" | sha256sum -c -; \
+    mkdir -p /usr/src/python; \
+    tar --extract --directory /usr/src/python --strip-components=1 --file python.tar.xz; \
+    rm python.tar.xz; \
+    \
+    cd /usr/src/python; \
+    gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)"; \
+    ./configure \
+        --build="$gnuArch" \
+        --enable-loadable-sqlite-extensions \
+        --enable-shared \
+        --with-system-expat \
+        --with-system-ffi \
+        --with-ensurepip=install \
+    ; \
+    make -j "$(nproc)"; \
+    make install; \
+    cd /; \
+    rm -rf /usr/src/python; \
+    \
+    find /usr/local -depth \
+        \( \
+            \( -type d -a \( -name test -o -name tests -o -name idle_test \) \) \
+            -o \
+            \( -type f -a \( -name '*.pyc' -o -name '*.pyo' -o -name 'libpython*.a' \) \) \
+        \) -exec rm -rf '{}' + \
+    ; \
+    \
+    ldconfig; \
+    \
+    python3 --version; \
+    pip3 --version
+
+# make some useful symlinks that are expected to exist
+RUN cd /usr/local/bin \
+    && ln -s idle3 idle \
+    && ln -s pydoc3 pydoc \
+    && ln -s python3 python \
+    && ln -s python3-config python-config
+
+CMD ["python3"]

@@ -1,0 +1,91 @@
+FROM php:8.3-apache
+
+# persistent runtime dependencies
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        ghostscript \
+    ; \
+    rm -rf /var/lib/apt/lists/*
+
+# install the PHP extensions we need
+# (no apt-mark/purge cleanup — keeps the build simple and reliable; slightly larger image)
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        libavif-dev \
+        libfreetype6-dev \
+        libicu-dev \
+        libjpeg-dev \
+        libmagickwand-dev \
+        libpng-dev \
+        libwebp-dev \
+        libzip-dev \
+    ; \
+    \
+    docker-php-ext-configure gd \
+        --with-avif \
+        --with-freetype \
+        --with-jpeg \
+        --with-webp \
+    ; \
+    docker-php-ext-install -j "$(nproc)" \
+        bcmath \
+        exif \
+        gd \
+        intl \
+        mysqli \
+        zip \
+    ; \
+    pecl install imagick-3.8.1; \
+    docker-php-ext-enable imagick; \
+    rm -rf /tmp/pear /var/lib/apt/lists/*
+
+# set recommended PHP.ini settings
+RUN { \
+        echo 'opcache.memory_consumption=128'; \
+        echo 'opcache.interned_strings_buffer=8'; \
+        echo 'opcache.max_accelerated_files=4000'; \
+        echo 'opcache.revalidate_freq=2'; \
+        echo 'opcache.fast_shutdown=1'; \
+    } > /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+RUN { \
+        echo 'error_reporting = E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING | E_RECOVERABLE_ERROR'; \
+        echo 'display_errors = Off'; \
+        echo 'display_startup_errors = Off'; \
+        echo 'log_errors = On'; \
+        echo 'error_log = /dev/stderr'; \
+        echo 'log_errors_max_len = 1024'; \
+        echo 'ignore_repeated_errors = On'; \
+        echo 'ignore_repeated_source = Off'; \
+        echo 'html_errors = Off'; \
+    } > /usr/local/etc/php/conf.d/error-logging.ini
+
+# silence the "Could not reliably determine server's FQDN" warning
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+RUN a2enmod rewrite expires remoteip
+
+ENV WORDPRESS_VERSION=6.9.4
+ENV WORDPRESS_SHA1=018542f4c3e15db0d8e38aaf0fcf1b5dc56dbb79
+
+RUN set -eux; \
+    curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
+    echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -; \
+    tar -xzf wordpress.tar.gz -C /usr/src/; \
+    rm wordpress.tar.gz; \
+    \
+# bake WordPress into the docroot at build time (the real entrypoint normally does this on first boot)
+    cp -a /usr/src/wordpress/. /var/www/html/; \
+    chown -R www-data:www-data /var/www/html
+
+# Note: removed VOLUME /var/www/html
+# Add it back once you wire up docker-entrypoint.sh.
+
+# Custom entrypoint — comment to build
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+CMD ["apache2-foreground"]

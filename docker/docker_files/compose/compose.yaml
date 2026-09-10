@@ -1,0 +1,14 @@
+services:
+
+  frontend:
+    image: nginx
+    ports:
+      - "8080:80"
+
+  database:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: password
+
+  redis:
+    image: redis

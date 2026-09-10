@@ -1,0 +1,35 @@
+#
+# Ubuntu Dockerfile
+#
+
+FROM ubuntu:24.04
+
+# avoid tzdata/etc. prompting during install
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install.
+RUN apt-get update \
+  && apt-get -y upgrade \
+  && apt-get install -y --no-install-recommends \
+       build-essential \
+       software-properties-common \
+       byobu \
+       curl \
+       git \
+       htop \
+       man-db \
+       unzip \
+       vim \
+       wget \
+       ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
+
+# Add dotfiles (uncomment once you have a ./root/ directory in the build context with these files)
+# ADD root/.bashrc    /root/.bashrc
+# ADD root/.gitconfig /root/.gitconfig
+# ADD root/.scripts   /root/.scripts
+
+# Working directory
+WORKDIR /root
+
+CMD ["bash"]
