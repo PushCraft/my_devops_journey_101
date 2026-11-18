@@ -1,0 +1,22 @@
+------------------------------------
+# Create simple .yaml file
+
+
+apiVersion:  # Kubernetes API version used to manage the resource.
+kind:        # Type of resource: Pod, Deployment, Service, Node, etc.
+metadata:    # Information identifying the resource. Dictionary.
+spec:        # Desired state and configuration of the resource. Dictionary.
+spec > containers  # Define the containers . List of dictionaries
+
+
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: nginx-pod
+
+spec:
+  containers:                      
+    - name: nginx-container
+      image: nginx
+
