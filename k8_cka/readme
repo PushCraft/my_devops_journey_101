@@ -96,29 +96,29 @@ Both maintain the desired number of Pods in a Kubernetes cluster.
 - **Self-healing:** Automatically creates replacement Pods if existing Pods fail or are deleted.
 - **Scaling:** Increases or decreases the number of Pods.
 
-### **ReplicaSet Manifest — nginx-rs.yaml**
+### **ReplicationController — nginx-rs.yaml**
 
 ```
-apiVersion: apps/v1
-kind: ReplicaSet
+apiVersion: v1
+
+kind: ReplicationController
 
 metadata:
-  name: nginx-rs
+  name: nginx-rc
 
 spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: nginx
+  replicas: 3                 # Desired number of Pods.
 
-  template:
+  template:                   # Blueprint for creating Pods.
     metadata:
-      labels:
-        app: nginx
-    spec:
+      labels:                 # Identifies the Pods.
+        app: nginx            # Label as a key-value pair.
+
+    spec:                     # Pod configuration.
       containers:
         - name: nginx-container
           image: nginx
+
 ```
 
 | Field      | Description                                 |
@@ -128,20 +128,62 @@ spec:
 | `template` | Blueprint for creating Pods.                |
 | `labels`   | Key-value pairs used to identify resources. |
 
-### **Commands**
-
-```
-kubectl apply -f nginx-rs.yaml
-kubectl get rs
-kubectl get rc
-kubectl get pods
-kubectl describe rs nginx-rs
-kubectl scale rs nginx-rs --replicas=5
-kubectl delete rs nginx-rs
-```
+# Common- Commands
+kubectl apply -f nginx-rs.yaml          # Create or update ReplicaSet.
+kubectl get rs                         # List ReplicaSets.
+kubectl get rc                         # List ReplicationControllers.
+kubectl get pods                       # List Pods.
+kubectl describe rs nginx-rs          # Detailed ReplicaSet information.
+kubectl scale rs nginx-rs --replicas=5 # Scale to 5 Pods.
+kubectl delete rs nginx-rs            # Delete ReplicaSet and its Pods.
+kubectl get replicationcontroller     # Same as kubectl get rc.
+kubectl get pods -o wide               # List Pods with node and IP information.
 
 ### **Production Hierarchy**
 
 **Deployment → ReplicaSet → Pods → Containers**
 
 In production, Deployments normally manage ReplicaSets, and ReplicaSets manage Pods.
+
+### **ReplicaSet — Minimum YAML**
+```
+apiVersion: apps/v1
+kind: ReplicaSet
+
+metadata:
+  name: nginx-rs
+
+spec:
+  replicas: 3              # Desired number of Pods.
+  selector:               # Selects which Pods to manage.
+    matchLabels:          # Matches Pod labels.
+      app: nginx
+
+  template:               # Blueprint for creating Pods.
+    metadata:
+      labels:
+        app: nginx        # Must match the selector.
+
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+```
+
+### **Commands**
+
+```
+kubectl apply -f nginx-rs.yaml           # Create or update ReplicaSet.
+kubectl get rs                          # List ReplicaSets.
+kubectl get replicaset                  # Same as kubectl get rs.
+kubectl get pods                        # List Pods.
+kubectl get pods -o wide                # List Pods with node and IP details.
+kubectl describe rs nginx-rs            # Detailed ReplicaSet information.
+kubectl scale rs nginx-rs --replicas=5   # Scale to 5 Pods.
+kubectl delete rs nginx-rs               # Delete ReplicaSet and its Pods.
+```
+
+**Main difference from ReplicationController:**
+- `apiVersion: apps/v1`
+- `kind: ReplicaSet`
+- Explicit `selector` is required.
