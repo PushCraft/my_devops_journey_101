@@ -86,3 +86,62 @@ kubectl get namespaces\
 
 - **-n:** Specify a namespace.
 - **-A:** All namespaces.
+
+
+## **ReplicationController & ReplicaSet**
+Both maintain the desired number of Pods in a Kubernetes cluster.
+
+- **ReplicationController (RC):** Older method of managing Pod replicas.
+- **ReplicaSet (RS):** Modern replacement for ReplicationController with advanced label selectors.
+- **Self-healing:** Automatically creates replacement Pods if existing Pods fail or are deleted.
+- **Scaling:** Increases or decreases the number of Pods.
+
+### **ReplicaSet Manifest — nginx-rs.yaml**
+
+```
+apiVersion: apps/v1
+kind: ReplicaSet
+
+metadata:
+  name: nginx-rs
+
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+```
+
+| Field      | Description                                 |
+| ---------- | ------------------------------------------- |
+| `replicas` | Desired number of Pods.                     |
+| `selector` | Identifies which Pods to manage.            |
+| `template` | Blueprint for creating Pods.                |
+| `labels`   | Key-value pairs used to identify resources. |
+
+### **Commands**
+
+```
+kubectl apply -f nginx-rs.yaml
+kubectl get rs
+kubectl get rc
+kubectl get pods
+kubectl describe rs nginx-rs
+kubectl scale rs nginx-rs --replicas=5
+kubectl delete rs nginx-rs
+```
+
+### **Production Hierarchy**
+
+**Deployment → ReplicaSet → Pods → Containers**
+
+In production, Deployments normally manage ReplicaSets, and ReplicaSets manage Pods.
