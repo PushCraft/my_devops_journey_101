@@ -1,90 +1,89 @@
-# Kubernetes Fundamentals
+# **Kubernetes Fundamentals**
 
-## 1. YAML File Structure
+## **1. YAML File Structure**
 
-| Field | Description | Data Type |
-|---|---|---|
-| `apiVersion` | Kubernetes API version | String |
-| `kind` | Resource type (Pod, Deployment, Service) | String |
-| `metadata` | Resource information (name, labels) | Dictionary |
-| `spec` | Desired configuration of the resource | Dictionary |
-| `spec.containers` | Containers running inside the Pod | List of dictionaries |
+| Field           | Description                              | Data Type            |
+| --------------- | ---------------------------------------- | -------------------- |
+| apiVersion      | Kubernetes API version                   | String               |
+| kind            | Resource type (Pod, Deployment, Service) | String               |
+| metadata        | Resource information (name, labels)      | Dictionary           |
+| spec            | Desired configuration of the resource    | Dictionary           |
+| spec.containers | Containers inside the Pod                | List of dictionaries |
 
-## 2. Create a Simple Nginx Pod
+## **2. Create a Simple Nginx Pod**
 
-**nginx.yaml**
+**Filename: nginx.yaml**
 
-```yaml
-apiVersion: v1
-kind: Pod
+apiVersion: v1\
+&#x20;   kind: Pod
 
-metadata:
-  name: nginx-pod
+metadata:\
+&#x20;     name: nginx-pod
 
-spec:
-  containers:
-    - name: nginx-container
-      image: nginx
-```
+spec:\
+&#x20;     containers:\
+&#x20;       \- name: nginx-container\
+&#x20;         image: nginx
 
-## 3. Create or Apply a Configuration
+## **3. Create or Apply a Configuration**
 
-```bash
-kubectl apply -f nginx.yaml
-kubectl create -f nginx.yaml
-kubectl run nginx-pod --image=nginx
-```
+kubectl apply -f nginx.yaml\
+&#x20;   kubectl create -f nginx.yaml\
+&#x20;   kubectl run nginx-pod --image=nginx
 
-- `apply`: Create or update a resource using its declared configuration.
-- `create`: Create a new resource.
-- `run`: Create a Pod directly without a YAML file.
+- **apply:** Create or update a resource.
+- **create:** Create a new resource.
+- **run:** Create a Pod directly without a YAML file.
 
-## 4. View Resources
+## **4. View Resources**
 
-```bash
-kubectl cluster-info
-kubectl get nodes
-kubectl get pods
-kubectl get pods -A
-kubectl describe pod nginx-pod
-```
+kubectl cluster-info\
+&#x20;   kubectl get nodes\
+&#x20;   kubectl get pods\
+&#x20;   kubectl get pods -A\
+&#x20;   kubectl describe pod nginx-pod
 
-- `-A`: Display resources from all namespaces.
-- `describe`: Display detailed resource information.
+- **-A:** Display resources from all namespaces.
+- **describe:** Display detailed information about a resource.
 
-## 5. Display Additional Information
+## **5. Display Additional Information**
 
-```bash
-kubectl get pods -o wide
-kubectl get nodes -o wide
-kubectl get deployments -o wide
-kubectl get services -o wide
-```
+kubectl get pods -o wide\
+&#x20;   kubectl get nodes -o wide\
+&#x20;   kubectl get deployments -o wide\
+&#x20;   kubectl get services -o wide
 
-- `-o`: Output format.
-- `wide`: Display additional columns.
+- **-o:** Output format.
+- **wide:** Display additional columns.
 
-## 6. Access a Running Container
+## **6. Access a Running Container**
 
-```bash
-kubectl exec -it nginx-pod -- sh
-```
+&#x20;   kubectl exec -it nginx-pod -- sh
 
 Opens an interactive shell inside the container.
 
-## 7. Delete Resources
+## **7. Delete Resources**
 
-```bash
-kubectl delete pod nginx-pod
-kubectl delete node worker1
-```
+kubectl delete pod nginx-pod\
+&#x20;   kubectl delete node worker1
 
-**Note:** Deleting a Node removes its Kubernetes resource, not the actual VM or physical machine.
+- Deleting a Pod terminates its containers.
+- Deleting a Node removes its Kubernetes resource, not the actual VM or physical machine.
 
-## 8. Edit a Resource
+## **8. Edit a Resource**
 
-```bash
-kubectl edit pod nginx-pod
-```
+&#x20;   kubectl edit pod nginx-pod
 
 Opens the existing Pod configuration in a text editor. Only supported fields can be modified.
+
+## **9. Namespace Management**
+
+A namespace is a logical grouping of resources within a Kubernetes cluster, similar to a folder.
+
+kubectl get namespaces\
+&#x20;   kubectl create namespace development\
+&#x20;   kubectl get pods -n development\
+&#x20;   kubectl get pods -A
+
+- **-n:** Specify a namespace.
+- **-A:** All namespaces.
