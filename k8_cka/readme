@@ -8,7 +8,7 @@ metadata:    # Information identifying the resource. Dictionary.
 spec:        # Desired state and configuration of the resource. Dictionary.
 spec > containers  # Define the containers . List of dictionaries
 
-
+# yaml file code here
 apiVersion: v1
 kind: Pod
 
@@ -19,4 +19,52 @@ spec:
   containers:                      
     - name: nginx-container
       image: nginx
+
+
+To run use:
+$ kubectl apply -f fileName.yaml                  
+      # apply -> Make this resource match my declared configuration.
+      # create -> Create this resource.
+
+
+Other commands:
+$ kubectl run hello-world
+$ kubectl cluster-info
+$ kubectl get nodes 
+
+
+$ kubectl get pods 
+$ kubectl get pods -A
+$ kubectl describe pod podNameHere          # In-depth information about the pod. 
+
+$ kubectl exec -it POD -- sh       
+
+$ kubectl get nodes -o wide         # information with “node”. 
+
+
+
+kubectl get pods -o wide
+kubectl get nodes -o wide
+kubectl get deployments -o wide
+kubectl get services -o wide
+
+
+
+# Delete: a resource. 
+$ kubectl delete pod nginx1
+$ kubectl delete node worker1
+
+
+# Edit the Pod:
+$ kubectl edit pod podName
+
+
+
+
+
+
+
+
+
+
 
