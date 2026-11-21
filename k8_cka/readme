@@ -77,7 +77,6 @@ kubectl delete pod nginx-pod\
 Opens the existing Pod configuration in a text editor. Only supported fields can be modified.
 
 ## **9. Namespace Management**
-
 A namespace is a logical grouping of resources within a Kubernetes cluster, similar to a folder.
 
 kubectl get namespaces\
