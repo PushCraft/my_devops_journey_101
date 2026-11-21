@@ -1,14 +1,20 @@
-------------------------------------
-# Create simple .yaml file
+# Kubernetes Fundamentals
 
+## 1. YAML File Structure
 
-apiVersion:  # Kubernetes API version used to manage the resource.
-kind:        # Type of resource: Pod, Deployment, Service, Node, etc.
-metadata:    # Information identifying the resource. Dictionary.
-spec:        # Desired state and configuration of the resource. Dictionary.
-spec > containers  # Define the containers . List of dictionaries
+| Field | Description | Data Type |
+|---|---|---|
+| `apiVersion` | Kubernetes API version | String |
+| `kind` | Resource type (Pod, Deployment, Service) | String |
+| `metadata` | Resource information (name, labels) | Dictionary |
+| `spec` | Desired configuration of the resource | Dictionary |
+| `spec.containers` | Containers running inside the Pod | List of dictionaries |
 
-# yaml file code here
+## 2. Create a Simple Nginx Pod
+
+**nginx.yaml**
+
+```yaml
 apiVersion: v1
 kind: Pod
 
@@ -16,55 +22,69 @@ metadata:
   name: nginx-pod
 
 spec:
-  containers:                      
+  containers:
     - name: nginx-container
       image: nginx
+```
 
+## 3. Create or Apply a Configuration
 
-To run use:
-$ kubectl apply -f fileName.yaml                  
-      # apply -> Make this resource match my declared configuration.
-      # create -> Create this resource.
+```bash
+kubectl apply -f nginx.yaml
+kubectl create -f nginx.yaml
+kubectl run nginx-pod --image=nginx
+```
 
+- `apply`: Create or update a resource using its declared configuration.
+- `create`: Create a new resource.
+- `run`: Create a Pod directly without a YAML file.
 
-Other commands:
-$ kubectl run hello-world
-$ kubectl cluster-info
-$ kubectl get nodes 
+## 4. View Resources
 
+```bash
+kubectl cluster-info
+kubectl get nodes
+kubectl get pods
+kubectl get pods -A
+kubectl describe pod nginx-pod
+```
 
-$ kubectl get pods 
-$ kubectl get pods -A
-$ kubectl describe pod podNameHere          # In-depth information about the pod. 
+- `-A`: Display resources from all namespaces.
+- `describe`: Display detailed resource information.
 
-$ kubectl exec -it POD -- sh       
+## 5. Display Additional Information
 
-$ kubectl get nodes -o wide         # information with “node”. 
-
-
-
+```bash
 kubectl get pods -o wide
 kubectl get nodes -o wide
 kubectl get deployments -o wide
 kubectl get services -o wide
+```
 
+- `-o`: Output format.
+- `wide`: Display additional columns.
 
+## 6. Access a Running Container
 
-# Delete: a resource. 
-$ kubectl delete pod nginx1
-$ kubectl delete node worker1
+```bash
+kubectl exec -it nginx-pod -- sh
+```
 
+Opens an interactive shell inside the container.
 
-# Edit the Pod:
-$ kubectl edit pod podName
+## 7. Delete Resources
 
+```bash
+kubectl delete pod nginx-pod
+kubectl delete node worker1
+```
 
+**Note:** Deleting a Node removes its Kubernetes resource, not the actual VM or physical machine.
 
+## 8. Edit a Resource
 
+```bash
+kubectl edit pod nginx-pod
+```
 
-
-
-
-
-
-
+Opens the existing Pod configuration in a text editor. Only supported fields can be modified.
