@@ -72,7 +72,9 @@ kubectl delete pod nginx-pod\
 
 ## **8. Edit a Resource**
 
-&#x20;   kubectl edit pod nginx-pod
+$ kubectl edit pod nginx-pod
+$ kubectl edit replicaset my-replicaset01    > vim > required change > Applied on running cluster
+
 
 Opens the existing Pod configuration in a text editor. Only supported fields can be modified.
 
@@ -181,9 +183,71 @@ kubectl get pods -o wide                # List Pods with node and IP details.
 kubectl describe rs nginx-rs            # Detailed ReplicaSet information.
 kubectl scale rs nginx-rs --replicas=5   # Scale to 5 Pods.
 kubectl delete rs nginx-rs               # Delete ReplicaSet and its Pods.
+kubectl describe replicaset replicaset01 
+kubectl delete replicaset replcaset01.  # Delete the specified replcaset. 
 ```
 
 **Main difference from ReplicationController:**
 - `apiVersion: apps/v1`
 - `kind: ReplicaSet`
 - Explicit `selector` is required.
+
+### **Selector (ReplicaSet)**
+- Selects and manages Pods based on matching labels.
+- Can adopt existing Pods in the same namespace if they have matching labels and no controlling owner.
+- Creates or deletes Pods to maintain the desired replica count.
+- Avoid overlapping selectors between controllers.
+**Label = identifies. Selector = filters. ReplicaSet = manages.**
+
+
+**Filter Pods manually.
+$ kubectl get pods -l app=nginx
+  -l: Filter resources by label.
+
+
+# Replicaset -> Scale : 
+You can scale Replicaset in two ways
+
+1. Declarative 
+  Just update the defintiation yaml ( increase the number in yaml )  > $ kubectl apply
+2. Imperative  
+  CLI ->   $ kubectl scale rs nginx-rs --replicas=5
+    # This directly updates the replica count without modifying your local YAML file.
+
+
+
+### **ReplicaSet — Labels & Selector** ( check the screenshot )
+- `selector.matchLabels`: Identifies which Pods the ReplicaSet should manage.
+- `template.metadata.labels`: Assigns labels to newly created Pods.
+- Both must match; otherwise, Kubernetes rejects the configuration.
+
+
+`spec.selector.matchLabels` must match the labels in `spec.template.metadata.labels`.
+- **Key and value** must match.
+- The Pod template can have additional labels.
+- The ReplicaSet's own `metadata.labels` is independent.
+**The selector and Pod labels are how a ReplicaSet ties itself to its Pods.**
+
+
+
+# Using "edit"
+kubectl edit resource resourceName
+
+$ kubectl edit replicaset new-replica-set 
+
+When to use which?
+- CKA: kubectl edit for quick changes.
+- Production: YAML + kubectl apply for repeatability, version control and consistency.
+Remember: edit changes the live resource. apply brings the live resource in line with your declared configuration.
+
+
+# **Delete Pods Using Labels**
+```
+kubectl get pods --show-labels      # Display Pod labels
+kubectl get pods -l app=nginx       # Filter matching Pods
+kubectl delete pods -l app=nginx    # Delete matching Pods
+kubectl delete pods --all           # Delete all Pods in current namespace
+```
+
+- `-l`: Label selector.
+- ReplicaSet automatically recreates its deleted Pods to maintain the desired replica count.
