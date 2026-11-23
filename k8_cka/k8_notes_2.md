@@ -127,3 +127,133 @@ kubectl rollout restart deploy nginx-deployment  # Restart Pods
 **Production rule:** Manage the Deployment instead of directly modifying its underlying ReplicaSets or Pods.
 
 **Remember:** Deployment = Version management. ReplicaSet = Quantity management. Pod = Hosts containers.
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+# Kubernetes: Deployment Updates and Rollbacks
+
+## 1. Update a Deployment
+
+**Option 1: Update using YAML**
+
+```
+kubectl apply -f deployment-definition.yml
+```
+
+- Creates or updates resources based on the YAML configuration.
+- If the Pod template changes, Kubernetes triggers a rollout.
+
+**Option 2: Update the container image directly**
+
+```
+kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1
+```
+
+- Updates the container image directly in the running cluster.
+- No YAML editing required.
+- Triggers a Rolling Update by default if the image changes.
+- Does not modify the original YAML file.
+
+## 2. Deployment Update Strategies
+
+### Recreate
+
+- Scales down the old ReplicaSet to **0 Pods**.
+- Creates or scales up the new ReplicaSet with the updated configuration.
+- Causes downtime because old Pods terminate before new ones start.
+- The old ReplicaSet is generally retained for rollback.
+
+### RollingUpdate (Default)
+
+- Gradually replaces old Pods with new Pods.
+- Old and new ReplicaSets coexist during the update.
+- Helps maintain application availability.
+- Updates are **not necessarily one Pod at a time**.
+
+Controlled by:
+
+- `maxSurge`: Maximum extra Pods allowed during an update (default: 25%).
+- `maxUnavailable`: Maximum unavailable Pods allowed during an update (default: 25%).
+
+## 3. Check Update Status and History
+
+**Check rollout status:**
+
+```
+kubectl rollout status deployment/myapp-deployment
+```
+
+**View revision history:**
+
+```
+kubectl rollout history deployment/myapp-deployment
+```
+
+## 4. Rollback (Undo Changes)
+
+**Rollback to the previous revision:**
+
+```
+kubectl rollout undo deployment/myapp-deployment
+```
+
+- Restores the previous Deployment Pod template, including its container image.
+- Kubernetes performs the rollback using the Deployment's update strategy.
+- Useful when an updated application version fails.
+
+**Rollback to a specific revision:**
+
+```
+kubectl rollout undo deployment/myapp-deployment --to-revision=1
+```
+
+**Note:** Kubernetes does not automatically roll back a failed Deployment by default.
+
+## 5. Quick Command Summary
+
+| Action             | Command                                                           |
+| ------------------ | ----------------------------------------------------------------- |
+| Create             | `kubectl create -f deployment-definition.yml`                     |
+| Get Deployments    | `kubectl get deployments`                                         |
+| Apply YAML changes | `kubectl apply -f deployment-definition.yml`                      |
+| Update image       | `kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1` |
+| Check rollout      | `kubectl rollout status deployment/myapp-deployment`              |
+| View history       | `kubectl rollout history deployment/myapp-deployment`             |
+| Rollback           | `kubectl rollout undo deployment/myapp-deployment`                |
+
+**CKA Key Takeaway:**
+
+`Deployment → ReplicaSet → Pods → Containers`
+
+- **Apply:** Create/update resources using YAML.
+- **Set image:** Update the container image directly.
+- **RollingUpdate:** Gradually replace Pods (default).
+- **Recreate:** Terminate old Pods before starting new ones.
+- **Rollback:** Restore the previous Deployment Pod template.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
