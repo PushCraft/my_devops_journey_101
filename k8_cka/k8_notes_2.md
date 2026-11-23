@@ -237,7 +237,11 @@ kubectl rollout undo deployment/myapp-deployment --to-revision=1
 
 
 
+$ kubectl create -f deployment-definition.yml --record
+  **--record	Records the executed command in a resource annotation.
+  **You can see the historical output -> When using -> $ kubectl rollout history deployment/myapp-deployment
 
+CKA takeaway: You can skip --record. Focus on kubectl rollout history, kubectl rollout status, and kubectl rollout undo.
 
 
 
