@@ -386,7 +386,31 @@ Modern alternative: `kubernetes.io/change-cause` annotation.
 
 
 
+### Kubernetes: Get Container Name (JSONPath)
 
+```bash
+kubectl get deployment frontend -o jsonpath='{.spec.template.spec.containers[*].name}'
+```
+
+**Output:**
+```text
+simple-webapp
+```
+
+**Explanation:**
+- `kubectl get deployment frontend`: Reads the Deployment configuration from the cluster.
+- `-o jsonpath`: Extracts a specific field.
+- `.spec.template.spec.containers[*].name`: Returns the container name(s) defined in the Pod template.
+- `[*]`: Selects all containers.
+
+**Important:** Kubernetes reads the **live configuration stored in the cluster**, not the local YAML file.
+
+**Update the container image:**
+```bash
+kubectl set image deployment/frontend simple-webapp=kodekloud/webapp-color:v2
+```
+
+**Remember:** `YAML → kubectl apply → Cluster` and `kubectl get → Reads cluster configuration`.
 
 
 
