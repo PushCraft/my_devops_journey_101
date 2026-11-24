@@ -294,6 +294,97 @@ strategy:
 - Kubernetes gradually replaces old Pods with new Pods while respecting these limits during a normal rolling update.
 
 
+-----------------------------
+
+# **Kubernetes – Deployment Updates and Rollbacks**
+
+## **1. RollingUpdate Strategy**
+
+Gradually replaces old Pods with new Pods while maintaining application availability. This is the default Deployment strategy.
+
+```
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 25%
+    maxUnavailable: 25%
+```
+
+- `maxSurge`: Ceiling. Maximum extra Pods allowed above the desired replica count. Rounded up.
+- `maxUnavailable`: Determines the floor. Maximum desired Pods allowed to be unavailable. Rounded down.
+
+### **Example**
+
+| Parameter              | 4 Replicas | 10 Replicas |
+| ---------------------- | ---------- | ----------- |
+| maxSurge (25%)         | 1          | 3           |
+| maxUnavailable (25%)   | 1          | 2           |
+| Ceiling (desired Pods) | 5          | 13          |
+| Floor (available Pods) | 3          | 8           |
+
+**Mental model:** Floor ← Desired replicas → Ceiling
+
+## **2. Recreate Strategy**
+
+Terminates all existing Pods before creating new Pods with the updated configuration. Causes application downtime.
+
+```
+strategy:
+  type: Recreate
+```
+
+**Example:** 4 old Pods → 0 Pods → 4 new Pods.
+
+- No `maxSurge` or `maxUnavailable`.
+- Remove the entire `rollingUpdate` section when switching to `Recreate`.
+- Changing the strategy alone does not restart Pods.
+
+## **3. Update the Container Image**
+
+```
+kubectl set image deployment/frontend simple-webapp=kodekloud/webapp-color:v2
+```
+
+Directly updates the container image without manually editing YAML. Triggers a rollout if the image changes.
+
+## **4. Rollout and Troubleshooting Commands**
+
+| Command                                                    | Purpose                                              |
+| ---------------------------------------------------------- | ---------------------------------------------------- |
+| `kubectl get deployments`                                  | Check Deployment status                              |
+| `kubectl get rs`                                           | Check old and new ReplicaSets                        |
+| `kubectl get pods`                                         | Check Pod status                                     |
+| `kubectl describe deployment frontend`                     | Check strategy, image, conditions and scaling events |
+| `kubectl edit deployment frontend`                         | Modify Deployment configuration                      |
+| `kubectl rollout status deployment/frontend`               | Monitor rollout progress                             |
+| `kubectl rollout history deployment/frontend`              | View revision history                                |
+| `kubectl rollout undo deployment/frontend`                 | Roll back to previous revision                       |
+| `kubectl rollout undo deployment/frontend --to-revision=2` | Roll back to a specific revision                     |
+
+## **5. minReadySeconds**
+
+```
+minReadySeconds: 20
+```
+
+A new Pod must remain Ready for at least 20 seconds before Kubernetes considers it Available.
+
+## **6. ReplicaSet Behavior**
+
+- Updating the Pod template creates a new ReplicaSet unless a matching one already exists.
+- The old ReplicaSet is scaled down to zero after a successful update.
+- Old ReplicaSets are generally retained for rollback.
+- During rollback, Kubernetes can reuse an existing ReplicaSet.
+
+## **7.&#x20;**`--record`**&#x20;Flag (Deprecated)**
+
+Previously used to record the command responsible for a Deployment change in its rollout history.
+
+Modern alternative: `kubernetes.io/change-cause` annotation.
+
+**Not required for maintaining rollout history or performing rollbacks.**
+
+
 
 
 
