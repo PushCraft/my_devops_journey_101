@@ -243,6 +243,57 @@ $ kubectl create -f deployment-definition.yml --record
 
 CKA takeaway: You can skip --record. Focus on kubectl rollout history, kubectl rollout status, and kubectl rollout undo.
 
+# Commands : 
+kubectl rollout status deployment/nginx
+kubectl rollout history deployment/nginx
+kubectl rollout undo deployment/nginx
+kubectl rollout undo deployment/nginx --to-revision=2
+
+
+
+
+## **Rolling Update: maxSurge and maxUnavailable**
+
+```
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 25%
+    maxUnavailable: 25%
+```
+
+- **maxSurge:** Maximum number of additional Pods allowed above the desired replica count during an update. Rounded up.
+- **maxUnavailable:** Maximum number of desired Pods allowed to be unavailable during an update. Rounded down.
+
+### **Example: Deployment with 10 replicas**
+
+| Parameter                       | Value  |
+| ------------------------------- | ------ |
+| Desired replicas                | 10     |
+| maxSurge (25%)                  | 3 Pods |
+| maxUnavailable (25%)            | 2 Pods |
+| Maximum desired Pods            | 13     |
+| Minimum targeted available Pods | 8      |
+
+### **How the rolling update works**
+
+| Stage                     | Old Pods | New Pods | Total |
+| ------------------------- | -------- | -------- | ----- |
+| Initial state             | 10       | 0        | 10    |
+| Scale up new ReplicaSet   | 10       | 3        | 13    |
+| Scale down old ReplicaSet | 8        | 3        | 11    |
+| Scale up new ReplicaSet   | 8        | 5        | 13    |
+| Continue rolling update   | ...      | ...      | ...   |
+| Update completed          | 0        | 10       | 10    |
+
+**Remember:**
+
+- `maxSurge` controls how many extra Pods can be created.
+- `maxUnavailable` controls how much availability can be sacrificed.
+- Both default to `25%`.
+- Kubernetes gradually replaces old Pods with new Pods while respecting these limits during a normal rolling update.
+
+
 
 
 
