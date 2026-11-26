@@ -96,4 +96,4 @@ kubectl get endpointslice -l kubernetes.io/service-name=nginx
 
 
 ![alt text](image.png)
-![alt text](image-1.png)
+![kub](image-1.png)
