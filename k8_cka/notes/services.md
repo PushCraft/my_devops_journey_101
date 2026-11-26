@@ -92,3 +92,8 @@ kubectl get endpointslice -l kubernetes.io/service-name=nginx
 ```
 
 **Remember:** Deployment manages Pods. Service provides stable access to them.
+
+
+
+![alt text](image.png)
+![alt text](image-1.png)
