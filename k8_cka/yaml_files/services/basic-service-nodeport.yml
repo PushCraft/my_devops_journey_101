@@ -12,4 +12,4 @@ spec:
  ports:
    - port: 80
      targetPort: 80
-     nodePort: 30008
+     nodePort: 30008      # Range is 30000 to 32767. If you don't specify, one would be assigned from the range. 
